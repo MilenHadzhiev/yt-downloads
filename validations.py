@@ -1,3 +1,4 @@
+import re
 from re import compile, fullmatch
 from werkzeug.datastructures import ImmutableMultiDict
 from flask import request, flash
@@ -37,3 +38,7 @@ def validate_signup_data(user: User, password: str) -> bool:
         return False
 
     return True
+
+def validate_url(url: str) -> bool:
+    pattern = re.compile(r'^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+')
+    return True if fullmatch(pattern, url) else None

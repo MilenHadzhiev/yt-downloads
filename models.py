@@ -11,6 +11,7 @@ class User(db.Model, UserMixin):
     last_name = db.Column(db.String(150))
     email = db.Column(db.String(150), unique=True)
     password_hash = db.Column(db.String(250))
+    videos = db.relationship('VideoEntry')
 
     def set_password(self, password: str) -> None:
         self.password_hash = generate_password_hash(password, method='sha256')
@@ -23,3 +24,16 @@ class User(db.Model, UserMixin):
 
     def __repr__(self) -> str:
         return self.__str__()
+
+
+class VideoEntry(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    description = db.Column(db.String(1000))
+    url = db.Column(db.String(250))
+    owner = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    def __str__(self):
+        return f'{self.url}'
+
+    def __repr__(self):
+        return f'{self.url}'

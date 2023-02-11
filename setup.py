@@ -15,10 +15,11 @@ def create_app() -> Flask:
 
     from views import views
     from auth import auth
+    from videos import videos
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/auth')
-
-    from models import User
+    app.register_blueprint(videos, url_prefix='/video')
+    from models import User, VideoEntry
 
     create_database(app)
 

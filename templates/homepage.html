@@ -1,8 +1,19 @@
 {% extends 'base.html' %}
 {% block head %}<title>Homepage</title>{% endblock head %}
 {% block body %}
-    <h1>Youtube Downloader</h1>
-    <h1>Welcome</h1>
-    <h3>Download high quality youtube videos in different formats</h3>
-
+    <h1 align="center">Youtube Downloader</h1>
+    <h3 align="center">Download high quality youtube videos in different formats</h3>
+    {% if current_user.is_authenticated %}
+        {% if videos %}
+            <div class="w-100 p-3">
+                {% for video in videos %}
+                    <div>
+                        <h4 align="center">{{ video.url }}</h4>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <h4 align="center">You have no videos saved</h4>
+        {% endif %}
+    {% endif %}
 {% endblock %}
