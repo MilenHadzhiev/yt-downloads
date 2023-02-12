@@ -1,0 +1,37 @@
+{% if videos %}
+    <div class="container">
+        <h4 align="center">Your queue</h4>
+
+        <div class="row">
+            {% for video in videos %}
+                <div class="col-lg-3">
+                    <div class="card" style="width: 18rem;">
+                        <h5 class="card-title">
+                            {{ video.title }}
+                        </h5>
+                        <div class="card-body">
+                            <img src="{{ video.thumb }}" class="img-fluid"/>
+                            {% if video.has_been_downloaded %}
+                                <h6 align="center" class="text-info">Downloaded</h6>
+                            {% else %}
+                                <h6 align="center" class="text-success">Not downloaded</h6>
+                            {% endif %}
+                            <p class="card-text">{{ video.desc }}</p>
+                            <a href="{{ url_for('videos.download_video', url=video.url) }}"
+                               class="btn btn-primary">
+                                Download
+                            </a>
+                            <a href="{{ url_for('videos.delete_video', id=video.id) }}" class="btn btn-warning">
+                                Delete
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% else %}
+    <h3>
+        You have no videos in queue
+    </h3>
+{% endif %}

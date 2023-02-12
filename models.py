@@ -31,6 +31,7 @@ class VideoEntry(db.Model):
     description = db.Column(db.String(1000))
     url = db.Column(db.String(250))
     owner = db.Column(db.Integer, db.ForeignKey('user.id'))
+    has_been_downloaded = db.Column(db.Boolean)
 
     def __str__(self):
         return f'{self.url}'
