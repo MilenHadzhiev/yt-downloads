@@ -17,6 +17,10 @@ def add_video():
         if not validate_url(url):
             flash('You must enter a youtube url', category='error')
             return render_template('add_video.html')
+        video = VideoEntry.query.filter_by(url=url).first()
+        if video:
+            flash('Video already in queue', category='info')
+            return redirect(url_for('views.homepage'))
         new_video = VideoEntry(
             url=url,
             description=request.form.get('description'),

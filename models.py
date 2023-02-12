@@ -7,6 +7,7 @@ from setup import db
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(150))
     first_name = db.Column(db.String(150))
     last_name = db.Column(db.String(150))
     email = db.Column(db.String(150), unique=True)
@@ -28,7 +29,7 @@ class User(db.Model, UserMixin):
 
 class VideoEntry(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    description = db.Column(db.String(1000))
+    description = db.Column(db.String(500))
     url = db.Column(db.String(250))
     owner = db.Column(db.Integer, db.ForeignKey('user.id'))
     has_been_downloaded = db.Column(db.Boolean)

@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block head %}
+{#    <link href="/static/read_only.css" rel="stylesheet" />#}
+{% endblock %}
+{% block body %}
+    <form method="post">
+        <h3 align="center">Your profile</h3>
+        <div class="mx-auto w-50 p-3">
+            <div class="mx-5 form-group">
+                <label for="username">Username:</label>
+                <input type="text"
+                   class="disable form-control"
+                   id="username"
+                   name="username"
+                   placeholder="{{ user.username }}"
+                   readonly>
+                <label for="first_name">First name:</label>
+                <input type="text"
+                       class="disable form-control"
+                       id="first_name"
+                       name="first_name"
+                       placeholder="{{ user.first_name }}"
+                       readonly>
+                <label for="last_name">Last name:</label>
+                <input type="text"
+                       class="disable form-control"
+                       id="last_name"
+                       name="last_name"
+                       placeholder="{{ user.last_name }}"
+                       readonly>
+                <label for="email">Email:</label>
+                <input type="email"
+                       class="disable form-control"
+                       id="email"
+                       name="email"
+                       placeholder="{{ user.email }}"
+                       readonly>
+                <label for="password1">New password:</label>
+                <input type="password"
+                       class="disable form-control"
+                       id="password1"
+                       name="password1"
+                       placeholder="********"
+                       readonly>
+                <label for="password2">Confirm new password:</label>
+                <input type="password"
+                       class="disable form-control"
+                       id="password2"
+                       name="password2"
+                       placeholder="********"
+                       >
+            </div>
+            <h5 align="center" class="mt-4">
+                <button class="btn btn-success" onclick="enableFields()">
+                    Edit
+                </button>
+            </h5>
+            <h5 align="center" class="mt-4">
+                <button class="disable btn btn-primary">
+                    Save
+                </button>
+            </h5>
+        </div>
+    </form>
+    <script>
+        function enableFields() {
+            let fields = document.getElementsByClassName('disable')
+            for (let i = 0; i < fields.length; i++){
+                fields[i].setAttribute("readonly", "false")
+            }
+        }
+    </script>
+{% endblock %}

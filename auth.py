@@ -32,11 +32,18 @@ def sign_up():
         if not validate_personal_data(data, is_login=False):
             # TODO
             return render_template('sign_up.html')
+        username = request.form.get('username')
         first_name = request.form.get('first_name')
         last_name = request.form.get('last_name')
         email = request.form.get('email')
         password1 = generate_password_hash(request.form.get('password1'), method='sha256')
-        new_user = User(first_name=first_name, last_name=last_name, email=email, password_hash=password1)
+        new_user = User(
+            username=username,
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+            password_hash=password1
+        )
         db.session.add(new_user)
         db.session.commit()
         login_user(new_user)
