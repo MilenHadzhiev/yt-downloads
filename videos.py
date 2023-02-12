@@ -6,6 +6,7 @@ from validations import validate_url
 from setup import db
 from download import download
 from flask_login import current_user, login_required
+from forms import VideoEditForm
 
 videos = Blueprint('videos', __name__)
 
@@ -41,10 +42,11 @@ def edit():
     print(request.form)
     if request.method == 'POST':
         video.description = request.form.get('description') if request.form.get('description') else video.description
+        video.has_been_downloaded = True if request.form.get('has_been_downloaded') else video.has_been_downloaded
         db.session.commit()
         return redirect(url_for('views.homepage'))
 
-    return render_template('edit_video.html', video=video)
+    return render_template('edit_video.html', form=VideoEditForm(),video=video)
 @videos.route('/download/', methods=['GET', 'POST'])
 def download_video():
     url = request.args.get('url')
