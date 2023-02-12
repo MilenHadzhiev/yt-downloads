@@ -1,9 +1,10 @@
 import re
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from models import VideoEntry
+from models import VideoEntry, User
 from pytube import YouTube as yt
 from flask_login import current_user, login_required
 from validations import validate_personal_data, regex
+from setup import db
 
 views = Blueprint('views', __name__)
 
@@ -27,22 +28,22 @@ def profile():
     if request.method == 'POST':
         if request.form.get('password1') != request.form.get('password2'):
             flash('Passwords must match', category='error')
-            return render_template('profile_page.html')
-        email = request.form.get('email')
+            return render_template('profile_page.html', user=current_user)
+        user = User.query.get(int(current_user.id))
+        email = request.form.get('email') if request.form.get('email') else user.email
         if not re.fullmatch(regex, email):
             flash('Email is incorrect format', category='error')
-            return render_template('profile_page.html')
-        user = User.query.filter_by(email=email).first()
-        username = request.form.get('username')
-        first_name = request.form.get('first_name')
-        last_name = request.form.get('last_name')
+            return render_template('profile_page.html', user=current_user)
+        username = request.form.get('username') if request.form.get('username') else user.username
+        first_name = request.form.get('first_name') if request.form.get('first_name') else user.first_name
+        last_name = request.form.get('last_name') if request.form.get('last_name') else user.last_name
         password1 = request.form.get('password1')
         user.username = username
         user.email = email
         user.first_name = first_name
         user.last_name = last_name
-        user.set_password(password1)
+        if password1:
+            user.set_password(password1)
         db.session.commit()
         return redirect(url_for('views.profile'))
-    user = current_user
-    return render_template('profile_page.html', user=user)
+    return render_template('profile_page.html', user=current_user)

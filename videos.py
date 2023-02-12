@@ -35,7 +35,13 @@ def add_video():
             flash('Video saved to queue', category='info')
     return render_template('add_video.html')
 
+@videos.route('/edit/', methods=['GET', 'POST'])
+def edit():
+    video = VideoEntry.query.get(int(request.args.get('id')))
+    if request.method == 'post':
+        pass
 
+    return render_template('edit_video.html')
 @videos.route('/download/', methods=['GET', 'POST'])
 def download_video():
     url = request.args.get('url')

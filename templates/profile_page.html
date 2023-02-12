@@ -1,7 +1,4 @@
 {% extends 'base.html' %}
-{% block head %}
-{#    <link href="/static/read_only.css" rel="stylesheet" />#}
-{% endblock %}
 {% block body %}
     <form method="post">
         <h3 align="center">Your profile</h3>
@@ -48,26 +45,30 @@
                        id="password2"
                        name="password2"
                        placeholder="********"
-                       >
+                       readonly>
             </div>
             <h5 align="center" class="mt-4">
-                <button class="btn btn-success" onclick="enableFields()">
+                <button type="button" class="btn btn-success" id="editBtn" >
                     Edit
                 </button>
             </h5>
             <h5 align="center" class="mt-4">
-                <button class="disable btn btn-primary">
+                <button type="submit" class="btn btn-primary" id="savebtn" disabled>
                     Save
                 </button>
             </h5>
         </div>
     </form>
     <script>
+        const editBtn = document.getElementById("editBtn")
+        editBtn.addEventListener('click', () => enableFields())
+
         function enableFields() {
             let fields = document.getElementsByClassName('disable')
-            for (let i = 0; i < fields.length; i++){
-                fields[i].setAttribute("readonly", "false")
+            for (let i = 0; i < fields.length; i++) {
+                fields[i].readOnly = false
             }
+            document.getElementById('savebtn').removeAttribute('disabled')
         }
     </script>
 {% endblock %}

@@ -21,7 +21,8 @@
                                class="btn btn-primary">
                                 Download
                             </a>
-                            <a class="btn btn-success">
+                            <a href="{{ url_for('videos.edit', id=video.id) }}"
+                               class="btn btn-success">
                                 Edit
                             </a>
                             <a href="{{ url_for('videos.delete_video', id=video.id) }}" class="btn btn-warning">
