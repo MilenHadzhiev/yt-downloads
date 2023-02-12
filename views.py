@@ -34,14 +34,10 @@ def profile():
         if not re.fullmatch(regex, email):
             flash('Email is incorrect format', category='error')
             return render_template('profile_page.html', user=current_user)
-        username = request.form.get('username') if request.form.get('username') else user.username
-        first_name = request.form.get('first_name') if request.form.get('first_name') else user.first_name
-        last_name = request.form.get('last_name') if request.form.get('last_name') else user.last_name
+        user.username = request.form.get('username') if request.form.get('username') else user.username
+        user.first_name = request.form.get('first_name') if request.form.get('first_name') else user.first_name
+        user.last_name = request.form.get('last_name') if request.form.get('last_name') else user.last_name
         password1 = request.form.get('password1')
-        user.username = username
-        user.email = email
-        user.first_name = first_name
-        user.last_name = last_name
         if password1:
             user.set_password(password1)
         db.session.commit()

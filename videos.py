@@ -38,10 +38,13 @@ def add_video():
 @videos.route('/edit/', methods=['GET', 'POST'])
 def edit():
     video = VideoEntry.query.get(int(request.args.get('id')))
-    if request.method == 'post':
-        pass
+    print(request.form)
+    if request.method == 'POST':
+        video.description = request.form.get('description') if request.form.get('description') else video.description
+        db.session.commit()
+        return redirect(url_for('views.homepage'))
 
-    return render_template('edit_video.html')
+    return render_template('edit_video.html', video=video)
 @videos.route('/download/', methods=['GET', 'POST'])
 def download_video():
     url = request.args.get('url')
