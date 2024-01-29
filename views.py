@@ -1,6 +1,7 @@
 import re
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from models import VideoEntry, User
+from models import User
+from video_entry.video_entry import VideoEntry
 from pytube import YouTube as yt
 from flask_login import current_user, login_required
 from validations import validate_personal_data, regex
@@ -14,11 +15,11 @@ def homepage():
     videos_data = [{
         'id': video.id,
         'desc': video.description,
-        'title': yt(video.url).title,
+        'title': f'Video {video.id}',
         'url': video.url,
         'thumb': yt(video.url).thumbnail_url,
         'has_been_downloaded': video.has_been_downloaded
-    } for video in videos]
+    } for i, video in enumerate(videos)]
     return render_template('homepage.html', videos=videos_data)
 
 

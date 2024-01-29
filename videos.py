@@ -1,7 +1,7 @@
 import time
 
 from flask import Blueprint, render_template, request, flash, redirect, url_for
-from models import VideoEntry
+from video_entry.video_entry import VideoEntry
 from validations import validate_url
 from setup import db
 from download import download
@@ -42,7 +42,7 @@ def edit():
     print(request.form)
     if request.method == 'POST':
         video.description = request.form.get('description') if request.form.get('description') else video.description
-        video.has_been_downloaded = True if request.form.get('has_been_downloaded') else video.has_been_downloaded
+        video.has_been_downloaded = True if request.form.get('has_been_downloaded') else False
         db.session.commit()
         return redirect(url_for('views.homepage'))
 
