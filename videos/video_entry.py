@@ -2,6 +2,8 @@ from setup import db
 
 class VideoEntry(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(250))
+    thumbnail_url = db.column(db.String(250))
     description = db.Column(db.String(500))
     url = db.Column(db.String(250))
     owner = db.Column(db.Integer, db.ForeignKey('user.id'))

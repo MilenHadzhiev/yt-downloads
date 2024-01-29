@@ -1,7 +1,7 @@
 import re
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from models import User
-from video_entry.video_entry import VideoEntry
+from videos.video_entry import VideoEntry
 from pytube import YouTube as yt
 from flask_login import current_user, login_required
 from validations import validate_personal_data, regex
