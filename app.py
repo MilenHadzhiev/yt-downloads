@@ -1,5 +1,7 @@
-from flask import Flask
+"""This module starts the flask web server"""
+
 from setup import create_app
+
 
 app = create_app()
 app.debug = True
