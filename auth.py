@@ -1,10 +1,20 @@
+"""Taking care of authorization & authentication through function-based routes"""
+
+
 from flask import Blueprint, render_template, request, flash, redirect, url_for
-from backend.validations import validate_personal_data
+
 from werkzeug.security import generate_password_hash
-from models import User
 from flask_login import login_user, login_required, logout_user
-auth = Blueprint('auth', __name__)
+
 from backend.setup import db
+
+from models import User
+
+from backend.validations import validate_personal_data
+
+
+auth = Blueprint('auth', __name__)
+
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
@@ -24,6 +34,7 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('auth.login'))
+
 
 @auth.route('/signup', methods=['GET', 'POST'])
 def sign_up():

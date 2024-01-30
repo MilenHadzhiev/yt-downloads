@@ -1,9 +1,11 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
+from flask_login import current_user, login_required
+
+from backend.setup import db
 from backend.videos.video import Video
 from backend.validations import validate_url
-from backend.setup import db
-from backend.videos.download import download
-from flask_login import current_user, login_required
+
+from download import download
 from forms import VideoEditForm
 from typing import Type, Optional, Union
 videos = Blueprint('videos', __name__)
@@ -48,7 +50,6 @@ def edit() -> Union[str, Type["BaseResponse"]]:
         video.has_been_downloaded = True if request.form.get('has_been_downloaded') else False
         db.session.commit()
         return redirect(url_for('views.homepage'))
-
     return render_template('edit_video.html', form=VideoEditForm(), video=video)
 
 
@@ -61,6 +62,7 @@ def download_video() -> Type["BaseResponse"]:
         video.has_been_downloaded = True
         db.session.commit()
     return redirect(url_for('views.homepage'))
+
 
 @videos.route('/delete/')
 @login_required
