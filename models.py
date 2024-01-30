@@ -1,11 +1,14 @@
-from email.policy import default
-from enum import unique
 from flask_login import UserMixin
-from sqlalchemy.sql import func
+
 from werkzeug.security import generate_password_hash, check_password_hash
+
 from setup import db
 
+
 class User(db.Model, UserMixin):
+    """
+    Custom user model
+    """
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150))
     first_name = db.Column(db.String(150))
@@ -28,6 +31,9 @@ class User(db.Model, UserMixin):
 
 
 class VideoEntry(db.Model):
+    """
+    Store video entries in database
+    """
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.String(500))
     url = db.Column(db.String(250))
