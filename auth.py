@@ -1,3 +1,5 @@
+"""Taking care of authorization & authentication through function-based routes"""
+
 from setup import db
 
 from flask import Blueprint, render_template, request, flash, redirect, url_for
@@ -9,7 +11,6 @@ from models import User
 
 from validations import validate_personal_data
 
-"""Taking care of authorization & authentication through function-based routes"""
 
 auth = Blueprint('auth', __name__)
 
