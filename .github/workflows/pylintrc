@@ -1,1 +1,1 @@
-disable=W0511,E0401
+disable=missing-function-docstring, import-error
