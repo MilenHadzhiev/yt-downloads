@@ -1,5 +1,6 @@
 from validations import validate_url
 
+
 def test_url_validator_recognize_correct_youtube_urls():
     urls = [
         'http://youtube.com/watch?v=iwGFalTRHDA',
@@ -18,6 +19,7 @@ def test_url_validator_recognize_correct_youtube_urls():
     for url in urls:
         assert validate_url(url)
 
+
 def test_url_validator_incorrect_urls():
     urls = [
         'aaaaaaaaaaa',
@@ -33,6 +35,7 @@ def test_url_validator_incorrect_urls():
     for url in urls:
         assert not validate_url(url)
 
+
 def test_url_validator_recognizes_non_youtube_urls():
     urls = [
         'https://pytube.io/en/latest/index.html',
@@ -43,13 +46,7 @@ def test_url_validator_recognizes_non_youtube_urls():
         'https://www.linkedin.com/in/milen-hadzhiev/',
         'https://www.vbox7.com/play:e9a80d2d40',
         'https://raft.github.io/raft.pdf',
-        'http://learnyouahaskell.com/chapters' # not secure
+        'http://learnyouahaskell.com/chapters'  # not secure
     ]
     for url in urls:
         assert not validate_url(url)
-
-
-if __name__ == '__main__':
-    test_url_validator_recognizes_non_youtube_urls()
-    test_url_validator_incorrect_urls()
-    test_url_validator_recognize_correct_youtube_urls()
