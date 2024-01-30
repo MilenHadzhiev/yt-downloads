@@ -1,9 +1,13 @@
 import re
-from flask import Blueprint, render_template, request, redirect, url_for, flash
-from models import VideoEntry, User
+
 from pytube import YouTube as yt
+
+from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import current_user, login_required
+
+from models import VideoEntry, User
 from validations import regex
+
 from setup import db
 
 views = Blueprint('views', __name__)

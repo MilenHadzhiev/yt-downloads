@@ -8,7 +8,7 @@ from pytube import YouTube
 def download(url: str, output_path: Optional[str]=None) -> None:
     try:
         YouTube(url, on_complete_callback=completed_download).streams.get_highest_resolution().download(output_path)
-    except Exception as e:
+    except Exception as e:  # pylint: disable=broad-exception-caught
         flash(f'Problem occured while downloading: {e}', category='error')
 
 
