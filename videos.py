@@ -1,11 +1,12 @@
-import time
-
 from flask import Blueprint, render_template, request, flash, redirect, url_for
-from models import VideoEntry
-from validations import validate_url
-from setup import db
-from download import download
 from flask_login import current_user, login_required
+
+from models import VideoEntry
+from setup import db
+
+from validations import validate_url
+
+from download import download
 from forms import VideoEditForm
 
 videos = Blueprint('videos', __name__)
@@ -32,8 +33,7 @@ def add_video():
         db.session.commit()
         if request.form.get('submit') == 'Save':
             return redirect(url_for('views.homepage'))
-        else:
-            flash('Video saved to queue', category='info')
+        flash('Video saved to queue', category='info')
     return render_template('add_video.html')
 
 @videos.route('/edit/', methods=['GET', 'POST'])

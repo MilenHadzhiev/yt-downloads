@@ -1,12 +1,15 @@
 import re
-from re import compile, fullmatch
+from re import compile, fullmatch  # pylint: disable=redefined-builtin
+
 from werkzeug.datastructures import ImmutableMultiDict
 from flask import request, flash
-from werkzeug.security import generate_password_hash, check_password_hash
+
 from models import User
+
 regex = compile(r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+')
 
-def validate_personal_data(data: ImmutableMultiDict, is_login: bool) -> bool:
+
+def validate_personal_data(data: ImmutableMultiDict, is_login: bool) -> bool:  # pylint: disable=unused-argument
     email = request.form.get('email')
     password1 = request.form.get('password1')
     if not fullmatch(regex, email):
@@ -16,8 +19,8 @@ def validate_personal_data(data: ImmutableMultiDict, is_login: bool) -> bool:
     user = User.query.filter_by(email=email).first()
     if is_login:
         return validate_login_data(user, password1)
-
     return validate_signup_data(user, password1)
+
 
 def validate_login_data(user: User, password: str) -> bool:
     if not user:
@@ -27,6 +30,7 @@ def validate_login_data(user: User, password: str) -> bool:
         flash('Wrong password', category='error')
         return False
     return True
+
 
 def validate_signup_data(user: User, password: str) -> bool:
     if user:
@@ -38,6 +42,7 @@ def validate_signup_data(user: User, password: str) -> bool:
         return False
 
     return True
+
 
 def validate_url(url: str) -> bool:
     pattern = re.compile(r'^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+')
