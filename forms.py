@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField
+from wtforms import StringField, BooleanField
+
 
 class VideoEditForm(FlaskForm):
     description = StringField('description')

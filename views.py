@@ -1,17 +1,19 @@
 import re
+
+from backend.videos.video import Video
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from models import User
-from videos.video_entry import VideoEntry
 from pytube import YouTube as yt
 from flask_login import current_user, login_required
-from validations import validate_personal_data, regex
-from setup import db
+from backend.validations import regex
+from backend.setup import db
 
 views = Blueprint('views', __name__)
 
+
 @views.route('/')
 def homepage():
-    videos = VideoEntry.query.all()
+    videos = Video.query.all()
     videos_data = [{
         'id': video.id,
         'desc': video.description,

@@ -16,5 +16,6 @@ def download(
     except Exception as e:
         flash(f'Problem occured while downloading: {e}', category='error')
 
+
 def completed_download(stream: Optional[Any] = None, file_path: Optional[str] = None) -> None:
     flash('Your download was completed', category='info')

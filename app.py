@@ -1,5 +1,4 @@
-from flask import Flask
-from setup import create_app
+from backend.setup import create_app
 
 app = create_app()
 app.debug = True

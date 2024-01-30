@@ -1,4 +1,5 @@
 import json
+from http import HTTPStatus
 from typing import Optional, Dict, Union
 
 
@@ -13,12 +14,14 @@ class ResponseFactory:
 
     def __init__(self, data: Dict[str, Union[str, int]]):
         """"
-        data is a dictionary with n keys:
+        :param
+            data is a dictionary with n keys:
             - subject: Model on which an operation was performed
             - action: Workflow from which the response orginates
             - method: The method which returns the Response
-            - error: Detailed error description
-            - msg: Additional information
+            - http_code: Optional
+            - error: Optional - Detailed error description
+            - msg: Optional - Additional information
         """
         self.__data = data
 
@@ -28,20 +31,28 @@ class ResponseFactory:
 
     @classmethod
     def success(cls) -> Response:
-        return Response('success', 200)
+        return Response('success', cls.data['http_code'] or HTTPStatus.OK)
 
     @classmethod
     def already_exists(cls) -> Response:
-        return Response(f'{cls.data["subject"]} already exists', 202)
+        return Response(f'{cls.data["subject"]} already exists', HTTPStatus.OK)
 
     @classmethod
-    def error(cls, error: str, code: int, details: dict) -> Response:
+    def _generic_error(cls, error: str, code: int, details: dict) -> Response:
         return Response(error, code, details)
 
     @classmethod
+    def error(cls):
+        return cls._generic_error(cls.data['error'], cls.data['http_code'], cls.data)
+
+    @classmethod
     def programming_error(cls) -> Response:
-        return cls.error('Internal Server Error', 500, {
-            'error': cls.data['error'],
-            'thrown_by': cls.data['method'],
-            'during': cls.data['action']
-        })
+        return cls._generic_error(
+            'Internal Server Error',
+            HTTPStatus.INTERNAL_SERVER_ERROR,
+            {
+                'error': cls.data['error'],
+                'thrown_by': cls.data['method'],
+                'during': cls.data['action']
+            }
+        )

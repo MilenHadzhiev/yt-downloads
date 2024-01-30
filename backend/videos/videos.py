@@ -1,25 +1,24 @@
-import time
-
 from flask import Blueprint, render_template, request, flash, redirect, url_for
-from videos.video_entry import VideoEntry
-from validations import validate_url
-from setup import db
-from videos.download import download
+from backend.videos.video import Video
+from backend.validations import validate_url
+from backend.setup import db
+from backend.videos.download import download
 from flask_login import current_user, login_required
 from forms import VideoEditForm
 from typing import Type, Optional, Union
 videos = Blueprint('videos', __name__)
+
 
 def __add_video_to_db() -> Optional[Type["BaseResponse"]]:
     url = request.form.get('url')
     if not validate_url(url):
         flash('You must enter a youtube url', category='error')
         return render_template('add_video.html')
-    video = VideoEntry.query.filter_by(url=url).first()
+    video = Video.query.filter_by(url=url).first()
     if video:
         flash('Video already in queue', category='info')
         return redirect(url_for('views.homepage'))
-    new_video = VideoEntry(
+    new_video = Video(
         url=url,
         description=request.form.get('description'),
         owner=current_user.id,
@@ -39,9 +38,10 @@ def add_video() -> str:
         __add_video_to_db()
     return render_template('add_video.html')
 
+
 @videos.route('/edit/', methods=['GET', 'POST'])
 def edit() -> Union[str, Type["BaseResponse"]]:
-    video = VideoEntry.query.get(int(request.args.get('id')))
+    video = Video.query.get(int(request.args.get('id')))
     print(request.form)
     if request.method == 'POST':
         video.description = request.form.get('description') if request.form.get('description') else video.description
@@ -50,11 +50,13 @@ def edit() -> Union[str, Type["BaseResponse"]]:
         return redirect(url_for('views.homepage'))
 
     return render_template('edit_video.html', form=VideoEditForm(), video=video)
+
+
 @videos.route('/download/', methods=['GET', 'POST'])
 def download_video() -> Type["BaseResponse"]:
     url = request.args.get('url')
     download(url)
-    videos_with_given_url = VideoEntry.query.filter_by(url=url)
+    videos_with_given_url = Video.query.filter_by(url=url)
     for video in videos_with_given_url:
         video.has_been_downloaded = True
         db.session.commit()
@@ -64,7 +66,7 @@ def download_video() -> Type["BaseResponse"]:
 @login_required
 def delete_video() -> Type["BaseResponse"]:
     video_id = int(request.args.get('id'))
-    video = VideoEntry.query.get(video_id)
+    video = Video.query.get(video_id)
     if video:
         if video.owner == current_user.id:
             db.session.delete(video)

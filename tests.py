@@ -1,4 +1,4 @@
-from validations import validate_url
+from backend.validations import validate_url
 
 def test_url_validator_recognize_correct_youtube_urls():
     urls = [

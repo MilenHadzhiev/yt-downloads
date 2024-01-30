@@ -1,10 +1,10 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
-from validations import validate_personal_data
-from werkzeug.security import generate_password_hash, check_password_hash
+from backend.validations import validate_personal_data
+from werkzeug.security import generate_password_hash
 from models import User
 from flask_login import login_user, login_required, logout_user
 auth = Blueprint('auth', __name__)
-from setup import db
+from backend.setup import db
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():

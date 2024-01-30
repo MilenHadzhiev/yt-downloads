@@ -1,6 +1,7 @@
-from setup import db
+from backend.setup import db
 
-class VideoEntry(db.Model):
+
+class Video(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(250))
     thumbnail_url = db.column(db.String(250))

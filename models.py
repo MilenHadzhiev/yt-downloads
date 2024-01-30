@@ -1,9 +1,7 @@
-from email.policy import default
-from enum import unique
 from flask_login import UserMixin
-from sqlalchemy.sql import func
 from werkzeug.security import generate_password_hash, check_password_hash
-from setup import db
+from backend.setup import db
+
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
