@@ -36,6 +36,7 @@ def add_video():
         flash('Video saved to queue', category='info')
     return render_template('add_video.html')
 
+
 @videos.route('/edit/', methods=['GET', 'POST'])
 def edit():
     video = VideoEntry.query.get(int(request.args.get('id')))
@@ -47,6 +48,8 @@ def edit():
         return redirect(url_for('views.homepage'))
 
     return render_template('edit_video.html', form=VideoEditForm(),video=video)
+
+
 @videos.route('/download/', methods=['GET', 'POST'])
 def download_video():
     url = request.args.get('url')
@@ -56,6 +59,7 @@ def download_video():
         video.has_been_downloaded = True
         db.session.commit()
     return redirect(url_for('views.homepage'))
+
 
 @videos.route('/delete/')
 @login_required
