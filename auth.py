@@ -6,11 +6,11 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for
 from werkzeug.security import generate_password_hash
 from flask_login import login_user, login_required, logout_user, login_manager
 
-from setup import db
+from backend.setup import db
 
 from models import User
 
-from validations import validate_personal_data
+from backend.validations import validate_personal_data
 
 
 auth = Blueprint('auth', __name__)

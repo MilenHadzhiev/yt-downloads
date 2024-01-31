@@ -5,25 +5,25 @@ from pytube import YouTube as yt
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import current_user, login_required
 
-from models import VideoEntry, User
-from validations import regex
-
-from setup import db
+from models import User
+from backend.validations import regex
+from backend.videos.video import Video
+from backend.setup import db
 
 views = Blueprint('views', __name__)
 
 
 @views.route('/')
 def homepage():
-    videos = VideoEntry.query.all()
+    videos = Video.query.all()
     videos_data = [{
         'id': video.id,
         'desc': video.description,
-        'title': yt(video.url).title,
+        'title': f'Video {video.id}',
         'url': video.url,
         'thumb': yt(video.url).thumbnail_url,
         'has_been_downloaded': video.has_been_downloaded
-    } for video in videos]
+    } for i, video in enumerate(videos)]
     return render_template('homepage.html', videos=videos_data)
 
 

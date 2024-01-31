@@ -1,6 +1,6 @@
 """This module starts the flask web server"""
 
-from setup import create_app
+from backend.setup import create_app
 
 
 app = create_app()
