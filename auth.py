@@ -1,10 +1,10 @@
 """Taking care of authorization & authentication through function-based routes"""
-
+from typing import Union
 
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 
 from werkzeug.security import generate_password_hash
-from flask_login import login_user, login_required, logout_user
+from flask_login import login_user, login_required, logout_user, login_manager
 
 from setup import db
 
@@ -15,6 +15,10 @@ from validations import validate_personal_data
 
 auth = Blueprint('auth', __name__)
 
+
+@login_manager.user_loader
+def load_user(user_id: Union[int, str]):
+    return User.query.get(int(user_id))
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
