@@ -24,7 +24,7 @@ def load_user(user_id: Union[int, str]):
 def login():
     if request.method == 'POST':
         data = request.form
-        if not validate_personal_data(data, is_login=True):
+        if not validate_personal_data(User.query.filter_by(email=data.get('email')).first(), is_login=True):
             return render_template('login.html')
         email = data.get('email')
         user = User.query.filter_by(email=email).first()
@@ -44,7 +44,7 @@ def logout():
 def sign_up():
     if request.method == 'POST':
         data = request.form
-        if not validate_personal_data(data, is_login=False):
+        if not validate_personal_data(User.query.filter_by(email=data.get('email')).first(), is_login=False):
             # TODO
             return render_template('sign_up.html')
         username = request.form.get('username')
