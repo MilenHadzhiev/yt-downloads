@@ -1,5 +1,4 @@
 from os.path import exists
-from typing import Union
 
 from flask import Flask
 from flask_login import LoginManager
@@ -8,7 +7,6 @@ from flask_sqlalchemy import SQLAlchemy
 from views import views
 from auth import auth
 from videos import videos
-from models import User
 
 db = SQLAlchemy()
 DB_NAME = 'yt-db.db'
@@ -30,9 +28,6 @@ def create_app() -> Flask:
     login_manager.init_app(app)
     login_manager.login_view = 'auth.login'
 
-    @login_manager.user_loader
-    def load_user(user_id: Union[int, str]):
-        return User.query.get(int(user_id))
     return app
 
 
