@@ -62,14 +62,17 @@ class DBConnection:
         return self.cursor.fetchall()
 
     def insert(self, table: str, serialized_values: List[Union[str, int]]) -> None:
+        self.execute(self._build_insert_sql(table, serialized_values))
+
+    def add_foreign_key(self, table: str, table_to: str, foreign_key_column: str, column_type: Type[Union[int, str]]) -> None:
+        self.execute(self.__build_add_foreign_key_sql(table, table_to, foreign_key_column, column_type))
+
+    def _build_insert_sql(self, table, serialized_values: List[Union[str, int]]) -> str:
         values = f'values({[", ".join(serialized_values)]}'
         sql = f"""
             INSERT INTO {table} ({self._get_table_columns_for_insert(table)}) VALUES ({values});
         """
-        self.execute(sql)
-
-    def add_foreign_key(self, table: str, table_to: str, foreign_key_column: str, column_type: Type[Union[int, str]]) -> None:
-        self.execute(self.__build_add_foreign_key_sql(table, table_to, foreign_key_column, column_type))
+        return sql
 
     def _get_table_columns_for_insert(self, table_name: str) -> str:
         columns = self.query(f"SELECT column_name FROM information_schema.columns WHERE table_name = '{table_name}' ORDER BY ordinal_position ASC")
