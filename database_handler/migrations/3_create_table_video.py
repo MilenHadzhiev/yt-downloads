@@ -1,24 +1,38 @@
-from database_handler.DBConnection import DBConnection
+from os.path import basename
+
+from database_handler.db_connection import DBConnection
 
 
 def safe_to_perform() -> bool:
-    pass
+    sql = """
+        SELECT NOT EXISTS (
+            SELECT FROM 
+                pg_tables
+            WHERE 
+                schemaname = 'public' AND 
+                tablename  = 'video'
+    )
+    """
+
+    with DBConnection() as connection:
+        return connection.query(sql)[0][0]
 
 
 def migration():
     sql = """
-        CREATE TABLE Video (
+        CREATE TABLE video (
             video_id INT PRIMARY KEY NOT NULL UNIQUE,
             description VARCHAR(1500),
             url VARCHAR(255) NOT NULL,
-            owner INT REFERENCES User(user_id),
-            has_been_downloaded BOOLEAN DEFAULT FALSE,
+            owner INT REFERENCES user_account(user_id),
+            has_been_downloaded BOOLEAN DEFAULT FALSE
         )
     """
 
     with DBConnection() as connection:
-        connection.cursor().execute(sql)
+        connection.execute(sql)
 
 
 if safe_to_perform():
     migration()
+print(f'Successfull migration {basename(__file__)}')

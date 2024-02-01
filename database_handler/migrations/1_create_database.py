@@ -1,4 +1,5 @@
 import os
+from os.path import basename
 
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT  # <-- ADD THIS LINE
@@ -9,7 +10,7 @@ def migration():
         SELECT 1 FROM pg_catalog.pg_database WHERE lower(datname) = lower('yt_downloads')
         """
     create_sql = """"
-        CREATE TABLE yt_downloads
+        CREATE DATABASE yt_downloads
     """
     connection = psycopg2.connect(
         dbname='postgres',
@@ -24,5 +25,7 @@ def migration():
     if cursor.fetchone() is None:
         cursor.execute(create_sql)
     connection.close()
+    print(f'Successfull migration {basename(__file__)}')
 
 migration()
+
