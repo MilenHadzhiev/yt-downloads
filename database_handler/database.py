@@ -1,21 +1,27 @@
 import os
 from functools import cached_property
+from typing import List, Union
 
 import psycopg2
+from database_handler.db_connection import DBConnection
 
 
 class DatabaseHandler:
-    TABLES_MAP = {
-        'user': 'User',
-        'video': 'Video'
-    }
+    """
+    Interactions with PostgreSQL database should be handled here
+    """
 
-    @cached_property
-    def connection(self):
-        return psycopg2.connect(
-            database=os.environ.get('db_name', 'yt_downloads'),
-            user=os.environ.get('user', 'postgres'),
-            password=os.environ.get('pass', 'postgres'),
-            host=os.environ.get("host", "localhost"),
-            port=os.environ.get("port", 5432)
-        )
+    def create_table(self, table_name, **kwargs) -> None:
+        pass
+
+    def insert(self, table_name: str, values: List[Union[int, str]]) -> None:
+        pass
+
+    def update(self, table_name: str, *args) -> None:
+        pass
+
+    def delete(self, table_name: str, *args) -> None:
+        pass
+
+    def get_result_dict(self, sql) -> dict:
+        pass

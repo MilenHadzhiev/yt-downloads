@@ -1,7 +1,7 @@
 import logging
 import os
 from functools import cached_property
-from typing import Optional, Union, Type, List
+from typing import Optional, Union, Type, List, Tuple
 
 import psycopg2
 
@@ -57,9 +57,13 @@ class DBConnection:
         self.cursor.execute(sql)
         self.connection.commit()
 
-    def query(self, sql: str) -> List[tuple]:
+    def query(self, table_name: str, sql: str) -> dict:
         self.execute(sql)
-        return self.cursor.fetchall()
+        return self._build_response_dict(table_name, self.cursor.fetchall())
+
+    def _build_response_dict(self, table_name: str, result_values: List[Tuple[str]]) -> List[dict]:
+        columns = self._get_table_columns(table_name)
+        return [{k: v for k, v in pair} for pair in [zip(columns, res) for res in result_values]]
 
     def insert(self, table: str, serialized_values: List[Union[str, int]]) -> None:
         self.execute(self._build_insert_sql(table, serialized_values))
@@ -68,16 +72,26 @@ class DBConnection:
         self.execute(self.__build_add_foreign_key_sql(table, table_to, foreign_key_column, column_type))
 
     def _build_insert_sql(self, table, serialized_values: List[Union[str, int]]) -> str:
-        values = f'values({[", ".join(serialized_values)]}'
+        values = f'values({[", ".join([str(a) for a in serialized_values])]}'
         sql = f"""
             INSERT INTO {table} ({self._get_table_columns_for_insert(table)}) VALUES ({values});
         """
         return sql
 
     def _get_table_columns_for_insert(self, table_name: str) -> str:
-        columns = self.query(f"SELECT column_name FROM information_schema.columns WHERE table_name = '{table_name}' ORDER BY ordinal_position ASC")
-        columns = '(' + ', '.join([column[0] for column in columns]) + ')'
-        print(columns)
+        return '(' + ', '.join(self._get_table_columns(table_name)) + ')'
+
+
+    def _get_table_columns(self, table_name: str) -> List[str]:
+        return [
+            col[0] for col in self._collect(
+                f"SELECT column_name FROM information_schema.columns WHERE table_name = '{table_name}' ORDER BY ordinal_position ASC"
+            )
+        ]
+
+    def _collect(self, sql: str) -> List[tuple]:
+        self.cursor.execute(sql)
+        return self.cursor.fetchall()
 
     def __build_add_foreign_key_sql(self, table: str, table_to: str, foreign_key_column: str, column_type: Type[Union[int, str]]) -> str:
         return f"""
@@ -92,7 +106,3 @@ class DBConnection:
 
     def __convert_python_type_to_sql_type(self, col_type: Type[Union[int, str]]) -> str:
         return self.PY_SQL_TYPES_MAP[col_type]
-
-
-with DBConnection() as c:
-    c.insert('video', [1, 2, 3])
