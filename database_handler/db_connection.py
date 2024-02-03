@@ -20,13 +20,13 @@ class DBConnection:
         self.__cursor = None
 
     def __enter__(self):
-        self.__db_name = os.environ.get('db_name', 'yt_downloads')
+        self.__db_name = os.environ.get('db_name')
         self.__connection = psycopg2.connect(
             dbname=self.__db_name,
-            user=os.environ.get('user', 'postgres'),
-            password=os.environ.get('password', 'postgres'),
-            host=os.environ.get('host', 'localhost'),
-            port=os.environ.get('port', 5432)
+            user=os.environ.get('user'),
+            password=os.environ.get('password'),
+            host=os.environ.get('host'),
+            port=os.environ.get('port')
         )
         self.__cursor = self.__connection.cursor()
         return self
@@ -72,12 +72,12 @@ class DBConnection:
         self.execute(self._build_insert_sql(table, serialized_values))
 
     def add_foreign_key(self, table: str, table_to: str, foreign_key_column: str, column_type: Type[Union[int, str]]) -> None:
-        self.execute(self.__build_add_foreign_key_sql(table, table_to, foreign_key_column, column_type))
+        self.execute(self._build_add_foreign_key_sql(table, table_to, foreign_key_column, column_type))
 
-    def _build_insert_sql(self, table, serialized_values: List[Union[str, int]]) -> str:
-        values = f'values({[", ".join([str(a) for a in serialized_values])]}'
+    def _build_insert_sql(self, table, serialized_values: List[str | int]) -> str:
+        values = f"""({", ".join([f"'{a}'" if not isinstance(a, (int, float)) else f'{a}' for a in serialized_values])})"""
         sql = f"""
-            INSERT INTO {table} ({self._get_table_columns_for_insert(table)}) VALUES ({values});
+            INSERT INTO {table}{self._get_table_columns_for_insert(table)} VALUES {values};
         """
         return sql
 
@@ -96,7 +96,7 @@ class DBConnection:
         self.cursor.execute(sql)
         return self.cursor.fetchall()
 
-    def __build_add_foreign_key_sql(self, table: str, table_to: str, foreign_key_column: str, column_type: Type[Union[int, str]]) -> str:
+    def _build_add_foreign_key_sql(self, table: str, table_to: str, foreign_key_column: str, column_type: Type[Union[int, str]]) -> str:
         return f"""
             ALTER TABLE {table}
                 ADD COLUMN {foreign_key_column} {self.__convert_python_type_to_sql_type(column_type)}
