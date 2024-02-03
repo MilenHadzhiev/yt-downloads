@@ -14,7 +14,7 @@ def safe_to_perform() -> bool:
     """
 
     with DBConnection() as connection:
-        return connection.query(sql)
+        return connection.get_raw_response(sql)[0][0]
 
 
 def migration():

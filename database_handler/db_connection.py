@@ -57,9 +57,12 @@ class DBConnection:
         self.cursor.execute(sql)
         self.connection.commit()
 
-    def query(self, table_name: str, sql: str) -> dict:
+    def query(self, table_name: str, sql: str) -> List[dict]:
+        return self._build_response_dict(table_name, self.get_raw_response(sql))
+
+    def get_raw_response(self, sql: str) -> List[tuple]:
         self.execute(sql)
-        return self._build_response_dict(table_name, self.cursor.fetchall())
+        return self.cursor.fetchall()
 
     def _build_response_dict(self, table_name: str, result_values: List[Tuple[str]]) -> List[dict]:
         columns = self._get_table_columns(table_name)
