@@ -87,14 +87,10 @@ class DBConnection:
 
     def _get_table_columns(self, table_name: str) -> List[str]:
         return [
-            col[0] for col in self._collect(
+            col[0] for col in self.get_raw_response(
                 f"SELECT column_name FROM information_schema.columns WHERE table_name = '{table_name}' ORDER BY ordinal_position ASC"
             )
         ]
-
-    def _collect(self, sql: str) -> List[tuple]:
-        self.cursor.execute(sql)
-        return self.cursor.fetchall()
 
     def _build_add_foreign_key_sql(self, table: str, table_to: str, foreign_key_column: str, column_type: Type[Union[int, str]]) -> str:
         return f"""
