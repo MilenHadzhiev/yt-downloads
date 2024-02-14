@@ -1,3 +1,4 @@
+# pylint: disable=invalid_name
 import os
 from os.path import basename
 
@@ -28,4 +29,3 @@ def migration():
     print(f'Successfull migration {basename(__file__)}')
 
 migration()
-

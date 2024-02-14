@@ -18,7 +18,7 @@ def test_db_connection_builds_correct_insert_sql(mocker: MockerFixture):
         return_value=['test_identity_column', 'test_column1', 'test_column2', 'time_stamp', 'user_stamp']
     )
     with DBConnection() as db:
-        actual = db._build_insert_sql('test_table', [1, 'Alabala', 'test_value', '2023-01-03T12:34:56', 'mhadzhiev'])
+        actual = db._build_insert_sql('test_table', [1, 'Alabala', 'test_value', '2023-01-03T12:34:56', 'mhadzhiev'])  # pylint: disable=protected-access
         expected = "INSERT INTO test_table(test_identity_column, test_column1, test_column2, time_stamp, user_stamp) " \
                    "VALUES (1, 'Alabala', 'test_value', '2023-01-03T12:34:56', 'mhadzhiev');"
 
@@ -41,5 +41,5 @@ def test_db_connection_builds_correct_add_foreign_key_sql(mocker: MockerFixture,
     END IF;   
     """
     with DBConnection() as db:
-        actual = db._build_add_foreign_key_sql('test_table', 'student', 'student_id', col_type)
+        actual = db._build_add_foreign_key_sql('test_table', 'student', 'student_id', col_type)  # pylint: disable=protected-access
         assert remove_whitespaces(actual) == remove_whitespaces(expected)

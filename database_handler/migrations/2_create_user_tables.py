@@ -1,3 +1,4 @@
+# pylint: disable=invalid_name
 from os.path import basename
 
 from database_handler.db_connection import DBConnection
@@ -17,7 +18,7 @@ def safe_to_perform() -> bool:
         return connection.get_raw_response(sql)[0][0]
 
 
-def migration():
+def migration() -> None:
     sql = """
         CREATE TABLE user_account (
             user_id INT PRIMARY KEY NOT NULL UNIQUE ,

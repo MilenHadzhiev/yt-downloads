@@ -7,6 +7,9 @@ import psycopg2
 
 
 class DBConnection:
+    """
+    Context manager to execute sql queries
+    """
     log = logging.getLogger('DBConnection')
 
     PY_SQL_TYPES_MAP = {
@@ -46,10 +49,10 @@ class DBConnection:
     def cursor(self):
         return self.__cursor
 
-    def perform_safely(self, sql: str, expect_result: Optional[bool] = False) -> Union[Optional[tuple], Exception]:
+    def perform_safely(self, table_name: str, sql: str, expect_result: Optional[bool] = False) -> Union[Optional[tuple], Exception]:
         try:
-            return self.query(sql) if expect_result else self.execute(sql)
-        except Exception as e:
+            return self.query(table_name, sql) if expect_result else self.execute(sql)
+        except Exception as e:  # pylint
             self.log.error(e)
             return Exception(str(e))
 
