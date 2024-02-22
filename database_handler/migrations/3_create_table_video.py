@@ -1,22 +1,11 @@
-# pylint: disable=invalid_name
 from os.path import basename
 
 from database_handler.db_connection import DBConnection
 
 
 def safe_to_perform() -> bool:
-    sql = """
-        SELECT NOT EXISTS (
-            SELECT FROM 
-                pg_tables
-            WHERE 
-                schemaname = 'public' AND 
-                tablename  = 'video'
-    )
-    """
-
     with DBConnection() as connection:
-        return connection.get_raw_response(sql)[0][0]
+        return connection.does_table_exist('video')
 
 
 def migration() -> None:

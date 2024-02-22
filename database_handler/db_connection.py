@@ -52,7 +52,7 @@ class DBConnection:
     def perform_safely(self, table_name: str, sql: str, expect_result: Optional[bool] = False) -> Union[Optional[tuple], Exception]:
         try:
             return self.query(table_name, sql) if expect_result else self.execute(sql)
-        except Exception as e:  # pylint
+        except Exception as e:  # pylint:disable=broad-exception-caught
             self.log.error(e)
             return Exception(str(e))
 
@@ -69,7 +69,7 @@ class DBConnection:
 
     def _build_response_dict(self, table_name: str, result_values: List[Tuple[str]]) -> List[dict]:
         columns = self._get_table_columns(table_name)
-        return [{k: v for k, v in pair} for pair in [zip(columns, res) for res in result_values]]
+        return [dict(pair) for pair in [zip(columns, res) for res in result_values]]
 
     def insert(self, table: str, serialized_values: List[Union[str, int]]) -> None:
         self.execute(self._build_insert_sql(table, serialized_values))
@@ -108,3 +108,17 @@ class DBConnection:
 
     def __convert_python_type_to_sql_type(self, col_type: Type[Union[int, str]]) -> str:
         return self.PY_SQL_TYPES_MAP[col_type]
+
+    def __get_table_not_exists_sql(self, table_name: str) -> str:
+        return f"""
+                SELECT NOT EXISTS (
+                    SELECT FROM
+                        pg_tables
+                    WHERE
+                        schemaname = 'public' AND
+                        tablename  = '{table_name}'
+            )
+            """
+
+    def does_table_exist(self, table_name: str) -> bool:
+        return self.get_raw_response(self.__get_table_not_exists_sql(table_name))[0][0]

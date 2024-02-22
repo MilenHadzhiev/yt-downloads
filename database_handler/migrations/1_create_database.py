@@ -1,4 +1,3 @@
-# pylint: disable=invalid_name
 import os
 from os.path import basename
 
@@ -10,8 +9,8 @@ def migration():
     condition_sql = """
         SELECT 1 FROM pg_catalog.pg_database WHERE lower(datname) = lower('yt_downloads')
         """
-    create_sql = """"
-        CREATE DATABASE yt_downloads
+    create_sql = """
+        CREATE DATABASE yt_downloads;
     """
     connection = psycopg2.connect(
         dbname='postgres',
