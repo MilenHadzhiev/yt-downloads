@@ -43,4 +43,4 @@ def validate_signup_data(user, password: str) -> bool:
 
 def validate_url(url: str) -> bool:
     pattern = re.compile(r'^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+')
-    return True if fullmatch(pattern, url) else None
+    return bool(fullmatch(pattern, url))
